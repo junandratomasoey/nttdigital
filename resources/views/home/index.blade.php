@@ -450,7 +450,7 @@
                             <option value="Website Perusahaan" {{ old('jenis_website') == 'Website Perusahaan' ? 'selected' : '' }}>Website Perusahaan</option>
                             <option value="Website Gereja" {{ old('jenis_website') == 'Website Gereja' ? 'selected' : '' }}>Website Gereja / Masjid</option>
                             <option value="Website Hotel" {{ old('jenis_website') == 'Website Hotel' ? 'selected' : '' }}>Website Hotel</option>
-                            <option value="Undangan Digital" {{ old('jenis_website') == 'Undangan Digital' ? 'selected' : '' }}>Undangan Digital</option>
+                            <option value="Undangan Digital" {{ old('jenis_website') == 'Undangan Digital' ? 'selected' : '' }}>Juan Digital</option>
                             <option value="Lainnya" {{ old('jenis_website') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
                         </select>
                     </div>
