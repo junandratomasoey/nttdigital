@@ -11,6 +11,9 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Di balik Cloudflare Tunnel: percayai X-Forwarded-* agar URL memakai https
+        $middleware->trustProxies(at: '*');
+
         $middleware->web(append: [
             \App\Http\Middleware\SimpanUtm::class,
         ]);

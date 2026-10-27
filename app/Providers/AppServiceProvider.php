@@ -7,6 +7,7 @@ use App\Models\Layanan;
 use App\Models\Portofolio;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
@@ -20,6 +21,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::defaultView('pagination::tailwind');
+
+        // Production diakses lewat https (Cloudflare)
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
 
         // Sitemap di-cache 1 jam; hapus cache setiap konten publik berubah.
         foreach ([Layanan::class, Portofolio::class, Artikel::class] as $model) {
