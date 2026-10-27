@@ -65,7 +65,7 @@ class LayananResource extends Resource
                 ])->columns(2),
 
             Forms\Components\Section::make('Halaman Detail Layanan')
-                ->description('Tampil di nttdigital.com/layanan/slug')
+                ->description('Tampil di nttdigital.site/layanan/slug')
                 ->collapsible()
                 ->schema([
                     Forms\Components\RichEditor::make('konten')

@@ -40,7 +40,7 @@ class PortofolioResource extends Resource
                         ->label('Slug')
                         ->unique(ignoreRecord: true)
                         ->maxLength(255)
-                        ->helperText('Alamat: nttdigital.com/portofolio/slug. Kosongkan untuk dibuat otomatis.'),
+                        ->helperText('Alamat: nttdigital.site/portofolio/slug. Kosongkan untuk dibuat otomatis.'),
 
                     Forms\Components\Select::make('kategori')
                         ->label('Kategori')
@@ -73,7 +73,7 @@ class PortofolioResource extends Resource
                     Forms\Components\TextInput::make('link_demo')
                         ->label('Link Demo')
                         ->url()
-                        ->placeholder('https://demo-desa.nttdigital.com')
+                        ->placeholder('https://demo-desa.nttdigital.site')
                         ->columnSpanFull(),
                 ])->columns(2),
 

@@ -36,7 +36,7 @@ class ArtikelResource extends Resource
                         }),
                     Forms\Components\TextInput::make('slug')
                         ->required()->unique(ignoreRecord: true)->maxLength(255)
-                        ->helperText('Alamat artikel: nttdigital.com/blog/slug. Hindari mengubah slug setelah terbit.'),
+                        ->helperText('Alamat artikel: nttdigital.site/blog/slug. Hindari mengubah slug setelah terbit.'),
                     Forms\Components\Textarea::make('ringkasan')
                         ->rows(2)->maxLength(300)
                         ->helperText('Tampil di daftar artikel. Kosongkan untuk diambil otomatis dari isi.'),

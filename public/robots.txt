@@ -2,4 +2,4 @@ User-agent: *
 Disallow: /admin
 Disallow: /livewire
 
-Sitemap: https://nttdigital.com/sitemap.xml
+Sitemap: https://nttdigital.site/sitemap.xml
