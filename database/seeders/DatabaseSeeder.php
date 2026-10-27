@@ -15,6 +15,7 @@ class DatabaseSeeder extends Seeder
             PortofolioSeeder::class,
             PaketHargaSeeder::class,
             SiteSettingSeeder::class,
+            KontenWebsiteSeeder::class,
         ]);
     }
 }

@@ -1,7 +1,5 @@
 @extends('layouts.app')
 
-@section('title', \App\Models\SiteSetting::get('site_nama', 'NTT Digital'))
-
 @section('content')
 
 {{-- ============================================================ --}}
@@ -48,9 +46,9 @@
                     @endif
 
                     {{-- JUDUL --}}
-                    <h1 class="text-white text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight mb-4">
+                    <{{ $loop->first ? 'h1' : 'h2' }} class="text-white text-3xl md:text-4xl lg:text-5xl font-semibold leading-tight mb-4">
                         {!! nl2br(e($slide->judul)) !!}
-                    </h1>
+                    </{{ $loop->first ? 'h1' : 'h2' }}>
 
                     {{-- DESKRIPSI --}}
                     @if($slide->deskripsi)
@@ -95,7 +93,7 @@
 
         {{-- PANAH KIRI --}}
         @if($slides->count() > 1)
-        <button @click="prev()"
+        <button @click="prev()" aria-label="Slide sebelumnya"
                 class="absolute left-4 top-1/2 -translate-y-1/2 z-20
                        w-10 h-10 rounded-full bg-white/15 border border-white/30 text-white
                        hover:bg-white/25 transition flex items-center justify-center text-lg">
@@ -103,7 +101,7 @@
         </button>
 
         {{-- PANAH KANAN --}}
-        <button @click="next()"
+        <button @click="next()" aria-label="Slide berikutnya"
                 class="absolute right-4 top-1/2 -translate-y-1/2 z-20
                        w-10 h-10 rounded-full bg-white/15 border border-white/30 text-white
                        hover:bg-white/25 transition flex items-center justify-center text-lg">
@@ -113,7 +111,7 @@
         {{-- DOT INDIKATOR --}}
         <div class="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 flex gap-2">
             @foreach($slides as $i => $slide)
-            <button @click="goTo({{ $i }})"
+            <button @click="goTo({{ $i }})" aria-label="Ke slide {{ $i + 1 }}"
                     :class="current === {{ $i }}
                         ? 'w-6 bg-white'
                         : 'w-2 bg-white/40'"
@@ -172,18 +170,22 @@
 
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
             @foreach($layanans as $layanan)
-            <div class="group border border-gray-100 rounded-2xl p-5 text-center
-                        hover:shadow-md hover:-translate-y-1 transition-all duration-200 cursor-default">
+            <a href="{{ route('layanan.show', $layanan) }}"
+               class="group border border-gray-100 rounded-2xl p-5 text-center hover:shadow-md hover:-translate-y-1 hover:border-teal-200 transition-all duration-200">
                 <div class="w-12 h-12 rounded-xl flex items-center justify-center mx-auto mb-3 text-2xl"
                      style="background-color: {{ $layanan->warna_bg }}">
                     {{ $layanan->emoji_icon }}
                 </div>
-                <div class="font-medium text-gray-800 text-sm">{{ $layanan->nama }}</div>
+                <div class="font-medium text-gray-800 text-sm group-hover:text-teal-700">{{ $layanan->nama }}</div>
                 @if($layanan->harga_mulai)
                 <div class="text-xs text-gray-400 mt-1">mulai {{ $layanan->harga_mulai }}</div>
                 @endif
-            </div>
+            </a>
             @endforeach
+        </div>
+
+        <div class="text-center mt-8">
+            <a href="{{ route('layanan.index') }}" class="text-teal-600 text-sm font-medium hover:text-teal-800">Pelajari semua layanan →</a>
         </div>
     </div>
 </section>
@@ -199,44 +201,21 @@
             <span class="text-xs font-medium text-teal-600 uppercase tracking-widest">Portofolio</span>
             <h2 class="text-gray-900 text-3xl font-semibold mt-2">Demo website kami</h2>
             <p class="text-gray-500 text-sm mt-3 max-w-lg mx-auto">
-                Klik untuk melihat demo langsung — semua bisa dikustomisasi sesuai kebutuhan Anda
+                Klik untuk melihat detail dan demo langsung — semua bisa dikustomisasi sesuai kebutuhan Anda
             </p>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5">
             @foreach($portofolios as $porto)
-            <div class="bg-white border border-gray-100 rounded-2xl overflow-hidden
-                        hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group">
-
-                {{-- THUMBNAIL --}}
-                <div class="h-36 flex items-center justify-center text-5xl"
-                     style="background-color: {{ $porto->warna_thumb }}">
-                    @if($porto->gambar_thumbnail)
-                        <img src="{{ asset('storage/' . $porto->gambar_thumbnail) }}"
-                             alt="{{ $porto->nama_proyek }}"
-                             class="w-full h-full object-cover">
-                    @else
-                        {{ $porto->emoji_icon }}
-                    @endif
-                </div>
-
-                <div class="p-4">
-                    <span class="inline-block bg-teal-50 text-teal-700 text-xs px-2.5 py-0.5 rounded-full mb-2">
-                        {{ $porto->kategori }}
-                    </span>
-                    <h3 class="font-medium text-gray-800 text-sm">{{ $porto->nama_proyek }}</h3>
-                    <p class="text-gray-400 text-xs mt-1">{{ $porto->deskripsi }}</p>
-
-                    @if($porto->tampilkan_demo && $porto->link_demo)
-                    <a href="{{ $porto->link_demo }}" target="_blank"
-                       class="inline-flex items-center gap-1 text-teal-600 text-xs font-medium mt-3
-                              hover:text-teal-800 transition">
-                        → Lihat demo
-                    </a>
-                    @endif
-                </div>
-            </div>
+                @include('partials.kartu-portofolio', ['porto' => $porto])
             @endforeach
+        </div>
+
+        <div class="text-center mt-8">
+            <a href="{{ route('portofolio.index') }}"
+               class="inline-block border border-teal-500 text-teal-700 text-sm font-medium px-6 py-2.5 rounded-full hover:bg-white transition">
+                Lihat semua portofolio
+            </a>
         </div>
     </div>
 </section>
@@ -251,76 +230,47 @@
         <div class="text-center mb-12">
             <span class="text-xs font-medium text-teal-600 uppercase tracking-widest">Harga</span>
             <h2 class="text-gray-900 text-3xl font-semibold mt-2">Paket yang transparan</h2>
-            <p class="text-gray-500 text-sm mt-3 max-w-lg mx-auto">
-                Harga tetap, tanpa biaya tersembunyi
-            </p>
+            <p class="text-gray-500 text-sm mt-3 max-w-lg mx-auto">Harga tetap, tanpa biaya tersembunyi</p>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             @foreach($pakets as $paket)
-            <div class="rounded-2xl p-6 border transition-all duration-200
-                        {{ $paket->unggulan
-                            ? 'border-teal-500 shadow-lg shadow-teal-100 relative'
-                            : 'border-gray-100 hover:border-gray-200 hover:shadow-md' }}">
-
-                @if($paket->unggulan)
-                <div class="absolute -top-3 left-1/2 -translate-x-1/2">
-                    <span class="bg-teal-600 text-white text-xs px-3 py-1 rounded-full whitespace-nowrap">
-                        {{ $paket->label_badge }}
-                    </span>
-                </div>
-                @else
-                @if($paket->label_badge)
-                <div class="inline-block bg-gray-100 text-gray-500 text-xs px-3 py-1 rounded-full mb-3">
-                    {{ $paket->label_badge }}
-                </div>
-                @endif
-                @endif
-
-                <h3 class="text-gray-900 font-semibold text-lg {{ $paket->unggulan ? 'mt-2' : '' }}">
-                    {{ $paket->nama }}
-                </h3>
-                <div class="text-teal-600 font-semibold text-2xl mt-2">
-                    {{ $paket->harga }}
-                    <span class="text-gray-400 text-sm font-normal">{{ $paket->satuan }}</span>
-                </div>
-
-                <ul class="mt-5 space-y-2.5">
-                    @foreach($paket->fitur as $fitur)
-                    <li class="flex items-start gap-2 text-sm text-gray-600">
-                        <span class="text-teal-500 mt-0.5 flex-shrink-0">✓</span>
-                        {{ $fitur }}
-                    </li>
-                    @endforeach
-                </ul>
-
-                <a href="#kontak"
-                   class="block text-center mt-6 py-2.5 rounded-full text-sm font-medium transition
-                          {{ $paket->unggulan
-                              ? 'bg-teal-600 text-white hover:bg-teal-700'
-                              : 'border border-teal-500 text-teal-600 hover:bg-teal-50' }}">
-                    Pilih Paket Ini
-                </a>
-            </div>
+                @include('partials.kartu-paket', ['paket' => $paket])
             @endforeach
+        </div>
+
+        <div class="text-center mt-8">
+            <a href="{{ route('harga') }}" class="text-teal-600 text-sm font-medium hover:text-teal-800">Bandingkan paket & harga per layanan →</a>
         </div>
     </div>
 </section>
 
 
 {{-- ============================================================ --}}
-{{-- SECTION 5: TENTANG                                            --}}
+{{-- SECTION 5: TESTIMONI (tampil jika sudah ada testimoni aktif)  --}}
 {{-- ============================================================ --}}
-<section id="tentang" class="py-20 bg-gray-50">
+@if($testimonis->isNotEmpty())
+<section id="testimoni" class="py-20 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-12">
+            <span class="text-xs font-medium text-teal-600 uppercase tracking-widest">Testimoni</span>
+            <h2 class="text-gray-900 text-3xl font-semibold mt-2">Kata klien kami</h2>
+        </div>
+        @include('partials.testimoni', ['testimonis' => $testimonis])
+    </div>
+</section>
+@endif
+
+
+{{-- ============================================================ --}}
+{{-- SECTION 6: TENTANG                                            --}}
+{{-- ============================================================ --}}
+<section id="tentang" class="py-20 {{ $testimonis->isNotEmpty() ? 'bg-white' : 'bg-gray-50' }}">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex flex-col md:flex-row items-center gap-12">
 
-            {{-- AVATAR --}}
             <div class="flex-shrink-0 text-center">
-                <div class="w-32 h-32 rounded-full bg-teal-100 border-4 border-teal-200
-                            flex items-center justify-center text-6xl mx-auto">
-                    👨‍💻
-                </div>
+                <div class="w-32 h-32 rounded-full bg-teal-100 border-4 border-teal-200 flex items-center justify-center text-6xl mx-auto">👨‍💻</div>
                 <div class="flex gap-2 justify-center mt-4 flex-wrap">
                     <span class="bg-white border border-gray-200 text-gray-500 text-xs px-3 py-1 rounded-full">Laravel</span>
                     <span class="bg-white border border-gray-200 text-gray-500 text-xs px-3 py-1 rounded-full">Tailwind CSS</span>
@@ -328,33 +278,21 @@
                 </div>
             </div>
 
-            {{-- TEKS --}}
             <div>
                 <span class="text-xs font-medium text-teal-600 uppercase tracking-widest">Tentang Kami</span>
-                <h2 class="text-gray-900 text-3xl font-semibold mt-2">
-                    {{ \App\Models\SiteSetting::get('site_nama', 'NTT Digital') }}
-                </h2>
+                <h2 class="text-gray-900 text-3xl font-semibold mt-2">{{ \App\Models\SiteSetting::get('site_nama', 'NTT Digital') }}</h2>
                 <p class="text-teal-600 text-sm mt-1">Jasa pembuatan website berbasis di Kupang, NTT</p>
                 <p class="text-gray-500 text-sm leading-relaxed mt-4">
-                    Kami adalah tim developer lokal yang berkomitmen membantu organisasi dan bisnis di
+                    Kami adalah developer lokal yang berkomitmen membantu organisasi dan bisnis di
                     Nusa Tenggara Timur bertransformasi digital. Dengan pengalaman membangun sistem
                     untuk berbagai instansi, kami memahami kebutuhan unik klien di NTT.
                 </p>
-                <p class="text-gray-500 text-sm leading-relaxed mt-3">
-                    Setiap website yang kami buat dirancang untuk mudah digunakan, cepat diakses,
-                    dan dapat dikelola secara mandiri oleh klien — tanpa harus bergantung pada developer.
-                </p>
                 <div class="flex flex-wrap gap-3 mt-6">
-                    <div class="bg-teal-50 text-teal-700 text-sm px-4 py-2 rounded-full">
-                        📍 Berbasis di Kupang, NTT
-                    </div>
-                    <div class="bg-teal-50 text-teal-700 text-sm px-4 py-2 rounded-full">
-                        💻 Spesialis Laravel & Tailwind
-                    </div>
-                    <div class="bg-teal-50 text-teal-700 text-sm px-4 py-2 rounded-full">
-                        🤝 Konsultasi gratis
-                    </div>
+                    <div class="bg-teal-50 text-teal-700 text-sm px-4 py-2 rounded-full">📍 Berbasis di Kupang, NTT</div>
+                    <div class="bg-teal-50 text-teal-700 text-sm px-4 py-2 rounded-full">💻 Spesialis Laravel & Tailwind</div>
+                    <div class="bg-teal-50 text-teal-700 text-sm px-4 py-2 rounded-full">🤝 Konsultasi gratis</div>
                 </div>
+                <a href="{{ route('tentang') }}" class="inline-block text-teal-600 text-sm font-medium hover:text-teal-800 mt-6">Kenali kami lebih jauh →</a>
             </div>
         </div>
     </div>
@@ -362,13 +300,53 @@
 
 
 {{-- ============================================================ --}}
-{{-- SECTION 6: KONTAK                                             --}}
+{{-- SECTION 7: ARTIKEL TERBARU                                    --}}
+{{-- ============================================================ --}}
+@if($artikels->isNotEmpty())
+<section id="blog" class="py-20 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+            <div>
+                <span class="text-xs font-medium text-teal-600 uppercase tracking-widest">Blog</span>
+                <h2 class="text-gray-900 text-3xl font-semibold mt-2">Tips & wawasan digital</h2>
+            </div>
+            <a href="{{ route('blog.index') }}" class="text-teal-600 text-sm font-medium hover:text-teal-800">Semua artikel →</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            @foreach($artikels as $artikel)
+                @include('partials.kartu-artikel', ['artikel' => $artikel])
+            @endforeach
+        </div>
+    </div>
+</section>
+@endif
+
+
+{{-- ============================================================ --}}
+{{-- SECTION 8: FAQ                                                --}}
+{{-- ============================================================ --}}
+@if($faqs->isNotEmpty())
+<section id="faq" class="py-20 bg-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center mb-10">
+            <span class="text-xs font-medium text-teal-600 uppercase tracking-widest">FAQ</span>
+            <h2 class="text-gray-900 text-3xl font-semibold mt-2">Pertanyaan yang sering diajukan</h2>
+        </div>
+        @include('partials.faq-list', ['faqs' => $faqs])
+        <div class="text-center mt-6">
+            <a href="{{ route('faq') }}" class="text-teal-600 text-sm font-medium hover:text-teal-800">Lihat semua pertanyaan →</a>
+        </div>
+    </div>
+</section>
+@endif
+
+
+{{-- ============================================================ --}}
+{{-- SECTION 9: KONTAK                                             --}}
 {{-- ============================================================ --}}
 <section id="kontak" class="py-20 bg-teal-900">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-
-            {{-- KIRI: TEKS --}}
             <div>
                 <span class="text-xs font-medium text-teal-300 uppercase tracking-widest">Kontak</span>
                 <h2 class="text-white text-3xl font-semibold mt-2">Siap mulai proyek Anda?</h2>
@@ -376,7 +354,6 @@
                     Konsultasi gratis, kami akan balas dalam 1×24 jam. Ceritakan kebutuhan website Anda
                     dan kami akan siapkan solusi terbaik.
                 </p>
-
                 <div class="mt-8 space-y-4">
                     <div class="flex items-center gap-3 text-white/70 text-sm">
                         <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">📍</span>
@@ -388,89 +365,16 @@
                     </div>
                     <div class="flex items-center gap-3 text-white/70 text-sm">
                         <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">💬</span>
-                        WhatsApp: +{{ \App\Models\SiteSetting::get('site_whatsapp') }}
+                        WhatsApp: +{{ \App\Support\Wa::nomor() }}
                     </div>
                 </div>
-
-                {{-- WA BUTTON --}}
-                <a href="https://wa.me/{{ \App\Models\SiteSetting::get('site_whatsapp') }}?text=Halo%20NTT%20Digital%2C%20saya%20ingin%20konsultasi%20pembuatan%20website"
-                   target="_blank"
-                   class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600
-                          text-white font-medium px-6 py-3 rounded-full mt-6 transition text-sm">
+                <a href="{{ \App\Support\Wa::link() }}" data-lokasi="beranda-kontak" target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white font-medium px-6 py-3 rounded-full mt-6 transition text-sm">
                     💬 Chat via WhatsApp
                 </a>
             </div>
 
-            {{-- KANAN: FORM --}}
-            <div class="bg-white/5 border border-white/10 rounded-2xl p-6">
-
-                @if(session('sukses'))
-                <div class="bg-teal-500/20 border border-teal-400/30 text-teal-200 rounded-xl p-4 mb-5 text-sm">
-                    ✅ {{ session('sukses') }}
-                </div>
-                @endif
-
-                <form action="{{ route('kontak.kirim') }}" method="POST" class="space-y-4">
-                    @csrf
-
-                    <div>
-                        <label class="block text-white/70 text-xs mb-1.5">Nama Lengkap *</label>
-                        <input type="text" name="nama" value="{{ old('nama') }}" required
-                               placeholder="Nama Anda"
-                               class="w-full bg-white/8 border border-white/15 text-black placeholder:text-gray-400
-                                      rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-teal-400
-                                      transition backdrop-blur-sm">
-                        @error('nama')
-                        <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-white/70 text-xs mb-1.5">Nomor WhatsApp *</label>
-                        <input type="text" name="whatsapp" value="{{ old('whatsapp') }}" required
-                               placeholder="08xxxxxxxxxx"
-                               class="w-full bg-white/8 border border-white/15 text-black placeholder:text-gray-400
-                                      rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-teal-400
-                                      transition">
-                        @error('whatsapp')
-                        <p class="text-red-400 text-xs mt-1">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label class="block text-white/70 text-xs mb-1.5">Jenis Website yang Dibutuhkan</label>
-                        <select name="jenis_website"
-                                class="w-full bg-white/8 border border-white/15 text-black placeholder:text-gray-400
-                                       rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-teal-400
-                                       transition">
-                            <option value="">-- Pilih Jenis --</option>
-                            <option value="Website Desa" {{ old('jenis_website') == 'Website Desa' ? 'selected' : '' }}>Website Desa</option>
-                            <option value="Website Sekolah" {{ old('jenis_website') == 'Website Sekolah' ? 'selected' : '' }}>Website Sekolah</option>
-                            <option value="Website UMKM" {{ old('jenis_website') == 'Website UMKM' ? 'selected' : '' }}>Website UMKM</option>
-                            <option value="Website Perusahaan" {{ old('jenis_website') == 'Website Perusahaan' ? 'selected' : '' }}>Website Perusahaan</option>
-                            <option value="Website Gereja" {{ old('jenis_website') == 'Website Gereja' ? 'selected' : '' }}>Website Gereja / Masjid</option>
-                            <option value="Website Hotel" {{ old('jenis_website') == 'Website Hotel' ? 'selected' : '' }}>Website Hotel</option>
-                            <option value="Undangan Digital" {{ old('jenis_website') == 'Undangan Digital' ? 'selected' : '' }}>Juan Digital</option>
-                            <option value="Lainnya" {{ old('jenis_website') == 'Lainnya' ? 'selected' : '' }}>Lainnya</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block text-white/70 text-xs mb-1.5">Pesan (opsional)</label>
-                        <textarea name="pesan" rows="3"
-                                  placeholder="Ceritakan kebutuhan website Anda..."
-                                  class="w-full bg-white/8 border border-white/15 text-black placeholder:text-gray-400
-                                         rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-teal-400
-                                         transition resize-none">{{ old('pesan') }}</textarea>
-                    </div>
-
-                    <button type="submit"
-                            class="w-full bg-teal-500 hover:bg-teal-400 text-white font-medium
-                                   py-3 rounded-xl text-sm transition">
-                        Kirim Pesan
-                    </button>
-                </form>
-            </div>
+            @include('partials.form-kontak')
         </div>
     </div>
 </section>

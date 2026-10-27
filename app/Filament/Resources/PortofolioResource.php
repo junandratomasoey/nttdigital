@@ -28,7 +28,19 @@ class PortofolioResource extends Resource
                     Forms\Components\TextInput::make('nama_proyek')
                         ->label('Nama Proyek')
                         ->required()
-                        ->maxLength(255),
+                        ->maxLength(255)
+                        ->live(onBlur: true)
+                        ->afterStateUpdated(function ($state, Forms\Set $set, ?Portofolio $record) {
+                            if (! $record) {
+                                $set('slug', \Illuminate\Support\Str::slug($state));
+                            }
+                        }),
+
+                    Forms\Components\TextInput::make('slug')
+                        ->label('Slug')
+                        ->unique(ignoreRecord: true)
+                        ->maxLength(255)
+                        ->helperText('Alamat: nttdigital.com/portofolio/slug. Kosongkan untuk dibuat otomatis.'),
 
                     Forms\Components\Select::make('kategori')
                         ->label('Kategori')
@@ -65,15 +77,47 @@ class PortofolioResource extends Resource
                         ->columnSpanFull(),
                 ])->columns(2),
 
-            Forms\Components\Section::make('Thumbnail')
+            Forms\Components\Section::make('Gambar')
                 ->schema([
                     Forms\Components\FileUpload::make('gambar_thumbnail')
                         ->label('Gambar Thumbnail')
                         ->image()
                         ->directory('portofolio')
-                        ->helperText('Gambar preview proyek. Format: JPG/PNG, maks 1MB.')
+                        ->maxSize(2048)
+                        ->helperText('Gambar preview proyek (juga dipakai saat dibagikan ke WhatsApp/Facebook). JPG/PNG, maks 2MB.')
+                        ->columnSpanFull(),
+                    Forms\Components\FileUpload::make('galeri')
+                        ->label('Galeri tangkapan layar')
+                        ->image()->multiple()->reorderable()->maxFiles(9)
+                        ->directory('portofolio/galeri')
+                        ->maxSize(2048)
                         ->columnSpanFull(),
                 ]),
+
+            Forms\Components\Section::make('Halaman Detail / Studi Kasus')
+                ->collapsible()
+                ->schema([
+                    Forms\Components\TextInput::make('klien')->label('Nama klien')->maxLength(150)
+                        ->helperText('Kosongkan untuk proyek demo.'),
+                    Forms\Components\TextInput::make('lokasi')->placeholder('Kab. Kupang')->maxLength(150),
+                    Forms\Components\TextInput::make('tahun')->numeric()->minValue(2015)->maxValue(2100),
+                    Forms\Components\TagsInput::make('teknologi')->placeholder('Laravel'),
+                    Forms\Components\RichEditor::make('konten')
+                        ->label('Cerita proyek')
+                        ->helperText('Tantangan klien, solusi yang dibuat, dan hasilnya.')
+                        ->fileAttachmentsDirectory('portofolio/lampiran')
+                        ->toolbarButtons(['h2', 'h3', 'bold', 'italic', 'link', 'bulletList', 'orderedList', 'blockquote', 'attachFiles', 'undo', 'redo'])
+                        ->columnSpanFull(),
+                    Forms\Components\Repeater::make('fitur')
+                        ->label('Fitur utama')
+                        ->simple(Forms\Components\TextInput::make('fitur')->required())
+                        ->addActionLabel('+ Tambah Fitur')
+                        ->reorderable()
+                        ->columnSpanFull(),
+                    Forms\Components\Textarea::make('meta_description')
+                        ->label('Deskripsi SEO (opsional)')->rows(2)->maxLength(160)
+                        ->columnSpanFull(),
+                ])->columns(2),
 
             Forms\Components\Section::make('Pengaturan')
                 ->schema([
@@ -98,6 +142,10 @@ class PortofolioResource extends Resource
             ->defaultSort('urutan')
             ->reorderable('urutan')
             ->actions([
+                Tables\Actions\Action::make('lihat')
+                    ->label('Lihat')->icon('heroicon-o-eye')->color('gray')
+                    ->url(fn (Portofolio $record) => route('portofolio.show', $record))
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ]);

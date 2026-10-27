@@ -51,17 +51,14 @@ class PaketHargaResource extends Resource
                 ->schema([
                     Forms\Components\Repeater::make('fitur')
                         ->label('Daftar Fitur')
-                        ->schema([
-                            Forms\Components\TextInput::make('item')
-                                ->label('')
+                        ->simple(
+                            Forms\Components\TextInput::make('fitur')
                                 ->placeholder('Contoh: 10 halaman website')
                                 ->required(),
-                        ])
-                        ->itemLabel(fn (array $state): ?string => $state['item'] ?? null)
+                        )
                         ->addActionLabel('+ Tambah Fitur')
                         ->columnSpanFull()
-                        ->reorderable()
-                        ->collapsible(),
+                        ->reorderable(),
                 ]),
 
             Forms\Components\Section::make('Pengaturan')

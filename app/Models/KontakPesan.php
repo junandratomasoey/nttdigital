@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class KontakPesan extends Model
 {
     protected $fillable = [
-        'nama', 'whatsapp', 'jenis_website', 'pesan', 'status', 'dibaca_pada',
+        'nama', 'whatsapp', 'jenis_website', 'paket', 'pesan', 'status', 'dibaca_pada',
+        'halaman_asal', 'utm_source', 'utm_medium', 'utm_campaign',
     ];
 
     protected $casts = [

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Artikel;
 use App\Models\KontakPesan;
 use App\Models\Portofolio;
-use App\Models\CarouselSlide;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
@@ -15,31 +15,38 @@ class StatsOverview extends BaseWidget
     protected function getStats(): array
     {
         $pesanBaru    = KontakPesan::baru()->count();
-        $totalPesan   = KontakPesan::count();
-        $totalPorto   = Portofolio::aktif()->count();
-        $totalSlide   = CarouselSlide::aktif()->count();
+        $leadBulanIni = KontakPesan::where('created_at', '>=', now()->startOfMonth())->count();
+        $leadBulanLalu = KontakPesan::whereBetween('created_at', [now()->subMonthNoOverflow()->startOfMonth(), now()->startOfMonth()])->count();
+
+        // Tren lead 7 hari terakhir untuk grafik kecil
+        $tren = collect(range(6, 0))->map(fn ($h) =>
+            KontakPesan::whereDate('created_at', now()->subDays($h)->toDateString())->count()
+        )->all();
+
+        $artikelTerbit = Artikel::terbit()->count();
+        $totalDilihat  = (int) Artikel::sum('dilihat');
 
         return [
             Stat::make('Pesan Baru', $pesanBaru)
                 ->description('Belum dibalas')
                 ->descriptionIcon('heroicon-m-chat-bubble-left-right')
-                ->color($pesanBaru > 0 ? 'danger' : 'success')
-                ->chart([0, $pesanBaru]),
+                ->color($pesanBaru > 0 ? 'danger' : 'success'),
 
-            Stat::make('Total Pesan Masuk', $totalPesan)
-                ->description('Semua pesan kontak')
-                ->descriptionIcon('heroicon-m-inbox')
+            Stat::make('Lead Bulan Ini', $leadBulanIni)
+                ->description("Bulan lalu: {$leadBulanLalu}")
+                ->descriptionIcon($leadBulanIni >= $leadBulanLalu ? 'heroicon-m-arrow-trending-up' : 'heroicon-m-arrow-trending-down')
+                ->chart($tren)
                 ->color('info'),
 
-            Stat::make('Portofolio Aktif', $totalPorto)
+            Stat::make('Artikel Terbit', $artikelTerbit)
+                ->description(number_format($totalDilihat, 0, ',', '.') . ' kali dibaca')
+                ->descriptionIcon('heroicon-m-newspaper')
+                ->color('warning'),
+
+            Stat::make('Portofolio Aktif', Portofolio::aktif()->count())
                 ->description('Demo website ditampilkan')
                 ->descriptionIcon('heroicon-m-briefcase')
                 ->color('success'),
-
-            Stat::make('Slide Carousel', $totalSlide)
-                ->description('Slide hero aktif')
-                ->descriptionIcon('heroicon-m-photo')
-                ->color('warning'),
         ];
     }
 }

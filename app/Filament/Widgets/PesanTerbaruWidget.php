@@ -46,7 +46,7 @@ class PesanTerbaruWidget extends BaseWidget
                     ->icon('heroicon-o-chat-bubble-left')
                     ->color('success')
                     ->url(fn (KontakPesan $record) =>
-                        "https://wa.me/{$record->whatsapp}?text=Halo%20{$record->nama}%2C%20terima%20kasih%20sudah%20menghubungi%20NTT%20Digital."
+                        "https://wa.me/{$record->whatsapp}?text=" . rawurlencode("Halo {$record->nama}, terima kasih sudah menghubungi NTT Digital.")
                     )
                     ->openUrlInNewTab(),
             ]);

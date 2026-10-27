@@ -2,7 +2,11 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\PengaturanSitus;
+use App\Filament\Resources\ArtikelResource;
 use App\Filament\Resources\CarouselSlideResource;
+use App\Filament\Resources\FaqResource;
+use App\Filament\Resources\TestimoniResource;
 use App\Filament\Resources\KontakPesanResource;
 use App\Filament\Resources\LayananResource;
 use App\Filament\Resources\PaketHargaResource;
@@ -44,6 +48,9 @@ class AdminPanelProvider extends PanelProvider
                 LayananResource::class,
                 PaketHargaResource::class,
                 KontakPesanResource::class,
+                TestimoniResource::class,
+                ArtikelResource::class,
+                FaqResource::class,
             ])
             ->widgets([
                 StatsOverview::class,
@@ -51,6 +58,13 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->pages([
                 Pages\Dashboard::class,
+                PengaturanSitus::class,
+            ])
+            ->navigationItems([
+                \Filament\Navigation\NavigationItem::make('Lihat Website')
+                    ->url('/', shouldOpenInNewTab: true)
+                    ->icon('heroicon-o-globe-alt')
+                    ->sort(99),
             ])
             ->middleware([
                 EncryptCookies::class,

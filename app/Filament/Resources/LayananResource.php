@@ -58,7 +58,41 @@ class LayananResource extends Resource
                         ->label('Harga Mulai')
                         ->placeholder('Rp 2.500.000')
                         ->maxLength(50),
+
+                    Forms\Components\TextInput::make('tagline')
+                        ->label('Tagline (subjudul halaman detail)')
+                        ->maxLength(255),
                 ])->columns(2),
+
+            Forms\Components\Section::make('Halaman Detail Layanan')
+                ->description('Tampil di nttdigital.com/layanan/slug')
+                ->collapsible()
+                ->schema([
+                    Forms\Components\RichEditor::make('konten')
+                        ->label('Penjelasan lengkap')
+                        ->fileAttachmentsDirectory('layanan/lampiran')
+                        ->toolbarButtons(['h2', 'h3', 'bold', 'italic', 'link', 'bulletList', 'orderedList', 'blockquote', 'attachFiles', 'undo', 'redo'])
+                        ->columnSpanFull(),
+                    Forms\Components\Repeater::make('fitur')
+                        ->label('Yang didapat klien')
+                        ->simple(Forms\Components\TextInput::make('fitur')->required()->placeholder('Contoh: Layanan surat online'))
+                        ->addActionLabel('+ Tambah Fitur')
+                        ->reorderable()
+                        ->columnSpanFull(),
+                    Forms\Components\FileUpload::make('gambar')
+                        ->label('Gambar ilustrasi')
+                        ->image()->imageEditor()->directory('layanan')->maxSize(2048)
+                        ->columnSpanFull(),
+                ]),
+
+            Forms\Components\Section::make('SEO')
+                ->description('Opsional. Jika kosong, nama & deskripsi layanan yang dipakai.')
+                ->collapsible()->collapsed()
+                ->schema([
+                    Forms\Components\TextInput::make('meta_title')->label('Judul SEO')->maxLength(60)
+                        ->placeholder('Jasa Pembuatan Website Desa di NTT'),
+                    Forms\Components\Textarea::make('meta_description')->label('Deskripsi SEO')->rows(2)->maxLength(160),
+                ]),
 
             Forms\Components\Section::make('Pengaturan')
                 ->schema([
@@ -86,6 +120,10 @@ class LayananResource extends Resource
             ->defaultSort('urutan')
             ->reorderable('urutan')
             ->actions([
+                Tables\Actions\Action::make('lihat')
+                    ->label('Lihat')->icon('heroicon-o-eye')->color('gray')
+                    ->url(fn (Layanan $record) => route('layanan.show', $record))
+                    ->openUrlInNewTab(),
                 Tables\Actions\EditAction::make(),
                 Tables\Actions\DeleteAction::make(),
             ])
