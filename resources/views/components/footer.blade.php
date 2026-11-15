@@ -5,8 +5,9 @@
 
             {{-- BRAND --}}
             <div>
-                <div class="text-teal-300 font-semibold text-xl mb-3">
-                    <span class="text-white">NTT</span>Digital
+                <div class="text-teal-300 font-semibold text-xl mb-3 flex items-center gap-2">
+                    <img src="{{ asset('images/logo-topi.png') }}" alt="" class="h-9 w-9" width="36" height="36">
+                    <span><span class="text-white">NTT</span>Digital</span>
                 </div>
                 <p class="text-white/60 text-sm leading-relaxed">
                     Jasa pembuatan website profesional berbasis di Kupang, Nusa Tenggara Timur.

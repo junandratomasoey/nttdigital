@@ -13,6 +13,7 @@
 
             {{-- LOGO --}}
             <a href="{{ route('home') }}" class="flex items-center gap-2" aria-label="Beranda NTT Digital">
+                <img src="{{ asset('images/logo-topi.png') }}" alt="" class="h-9 w-9" width="36" height="36">
                 <span class="text-teal-200 font-semibold text-xl tracking-tight">
                     <span class="text-white">NTT</span>Digital
                 </span>

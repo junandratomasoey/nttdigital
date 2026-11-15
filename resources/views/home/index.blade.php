@@ -128,9 +128,9 @@
             <div class="flex justify-around md:justify-center md:gap-16">
                 <div class="text-center">
                     <div class="text-teal-300 font-semibold text-lg">
-                        {{ \App\Models\SiteSetting::get('jumlah_proyek', '15+') }}
+                        {{ \App\Models\SiteSetting::get('jumlah_proyek', '7+') }}
                     </div>
-                    <div class="text-white/45 text-xs">Proyek selesai</div>
+                    <div class="text-white/45 text-xs">Contoh website siap pakai</div>
                 </div>
                 <div class="text-center">
                     <div class="text-teal-300 font-semibold text-lg">

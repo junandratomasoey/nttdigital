@@ -11,12 +11,12 @@ class CarouselSlideSeeder extends Seeder
     {
         $slides = [
             [
-                'judul'              => 'Website Profesional untuk Desa & Instansi Pemerintah',
+                'judul'              => 'Website Profesional untuk Usaha di NTT',
                 'subjudul'           => '📍 Berbasis di Kupang, NTT',
-                'deskripsi'          => 'Kami membantu desa dan instansi di NTT hadir secara digital — profil, berita, layanan surat, dan informasi publik dalam satu platform.',
+                'deskripsi'          => 'Kafe, toko, hotel, dan usaha lokal di NTT tampil profesional online — katalog produk, tombol WhatsApp, dan mudah ditemukan di Google.',
                 'warna_tema'         => 'teal',
-                'emoji_icon'         => '🏘️',
-                'teks_tombol_utama'  => 'Lihat Demo Desa',
+                'emoji_icon'         => '🛍️',
+                'teks_tombol_utama'  => 'Lihat Contoh Website',
                 'link_tombol_utama'  => '#portofolio',
                 'teks_tombol_kedua'  => 'Konsultasi Gratis',
                 'link_tombol_kedua'  => '#kontak',
@@ -25,8 +25,8 @@ class CarouselSlideSeeder extends Seeder
             ],
             [
                 'judul'              => 'Tingkatkan Kepercayaan dengan Tampilan Digital',
-                'subjudul'           => '🎓 Untuk Sekolah & UMKM',
-                'deskripsi'          => 'Sekolah, toko, dan usaha kecil di NTT kini bisa tampil profesional online — katalog produk, galeri, berita, dan formulir pendaftaran.',
+                'subjudul'           => '🎓 Untuk Sekolah, Gereja & Komunitas',
+                'deskripsi'          => 'Sekolah, gereja, dan komunitas di NTT kini bisa tampil profesional online — profil, jadwal, galeri, berita, dan formulir pendaftaran.',
                 'warna_tema'         => 'biru',
                 'emoji_icon'         => '🏫',
                 'teks_tombol_utama'  => 'Lihat Portofolio',

@@ -11,7 +11,7 @@ class PortofolioSeeder extends Seeder
     {
         $portofolios = [
             [
-                'nama_proyek'    => 'Desa Oesao',
+                'nama_proyek'    => 'Desa Lontar Indah (demo)',
                 'kategori'       => 'Desa',
                 'emoji_icon'     => '🏘️',
                 'warna_thumb'    => '#E1F5EE',
@@ -21,7 +21,7 @@ class PortofolioSeeder extends Seeder
                 'urutan'         => 1,
             ],
             [
-                'nama_proyek'    => 'SMA Negeri 1 Kupang',
+                'nama_proyek'    => 'SMA Harapan Kupang (demo)',
                 'kategori'       => 'Sekolah',
                 'emoji_icon'     => '🏫',
                 'warna_thumb'    => '#E6F1FB',
@@ -51,7 +51,7 @@ class PortofolioSeeder extends Seeder
                 'urutan'         => 4,
             ],
             [
-                'nama_proyek'    => 'GMIT Kota Kupang',
+                'nama_proyek'    => 'Gereja Kasih Kupang (demo)',
                 'kategori'       => 'Gereja',
                 'emoji_icon'     => '⛪',
                 'warna_thumb'    => '#EEEDFE',

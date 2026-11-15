@@ -56,7 +56,7 @@ class PengaturanSitus extends Page implements HasForms
                         Forms\Components\Textarea::make('site_deskripsi')->label('Deskripsi singkat')->rows(3)->maxLength(300)
                             ->helperText('Deskripsi default untuk Google & media sosial (120–160 karakter ideal).'),
                         Forms\Components\Fieldset::make('Angka statistik di beranda')->schema([
-                            Forms\Components\TextInput::make('jumlah_proyek')->label('Proyek selesai')->placeholder('15+'),
+                            Forms\Components\TextInput::make('jumlah_proyek')->label('Contoh website siap pakai')->placeholder('7+'),
                             Forms\Components\TextInput::make('jumlah_kategori')->label('Kategori website')->placeholder('7+'),
                             Forms\Components\TextInput::make('respon_jam')->label('Waktu respon')->placeholder('24 jam'),
                         ])->columns(3),
