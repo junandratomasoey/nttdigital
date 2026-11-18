@@ -364,7 +364,7 @@
                     </div>
                     <div class="flex items-center gap-3 text-white/70 text-sm">
                         <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">📧</span>
-                        {{ \App\Models\SiteSetting::get('site_email', 'info@nttdigital.com') }}
+                        {{ \App\Models\SiteSetting::get('site_email', 'nttdigital@gmail.com') }}
                     </div>
                     <div class="flex items-center gap-3 text-white/70 text-sm">
                         <span class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">💬</span>
