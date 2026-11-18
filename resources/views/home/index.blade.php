@@ -30,7 +30,10 @@
                 @if($slide->gambar)
                 <div class="absolute inset-0 bg-cover bg-center"
                      style="background-image: url('{{ asset('storage/' . $slide->gambar) }}')">
-                    <div class="absolute inset-0 bg-teal-900/70"></div>
+                    <div class="absolute inset-0
+                        @if($slide->warna_tema === 'biru') bg-[#042C53]/60
+                        @elseif($slide->warna_tema === 'ungu') bg-[#3C3489]/60
+                        @else bg-teal-900/60 @endif"></div>
                 </div>
                 @endif
 
