@@ -35,7 +35,7 @@ class HomeController extends Controller
     public function kirimPesan(Request $request)
     {
         // Honeypot anti-spam: field "website" disembunyikan dari manusia.
-        if (filled($request->input('website'))) {
+        if (filled($request->input('website')) || $this->terlaluCepat($request->input('_t'))) {
             return redirect()->to(url()->previous() . '#form-kontak')
                 ->with('sukses', 'Pesan Anda telah terkirim! Kami akan menghubungi Anda segera.');
         }
@@ -68,6 +68,21 @@ class HomeController extends Controller
         return redirect()->to(url()->previous() . '#form-kontak')
             ->with('sukses', 'Pesan Anda telah terkirim! Kami akan menghubungi Anda segera.')
             ->with('lead_terkirim', true);
+    }
+
+    /**
+     * Time-trap anti-spam: bot biasanya mengirim form < 3 detik setelah halaman dibuka.
+     * Token kosong atau rusak juga dianggap spam.
+     */
+    private function terlaluCepat(?string $token): bool
+    {
+        try {
+            $dibuka = (int) decrypt((string) $token);
+        } catch (\Throwable) {
+            return true;
+        }
+
+        return now()->timestamp - $dibuka < 3;
     }
 
     /** 0812-3456-7890 -> 6281234567890 (siap dipakai di link wa.me). */

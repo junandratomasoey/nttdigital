@@ -22,6 +22,7 @@
         {{-- Honeypot anti-spam (jangan dihapus) --}}
         <div class="hidden" aria-hidden="true">
             <label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+            <input type="hidden" name="_t" value="{{ encrypt(now()->timestamp) }}">
         </div>
 
         <div>
